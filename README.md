@@ -1,7 +1,7 @@
 # Pokemon Go Working Bot Hack
 
 
-## USE WITH CAUTION!
+## USE WITH CAUTION! 
 Niantic may ban you if you run the bot while signed in through your phone.
 
 
