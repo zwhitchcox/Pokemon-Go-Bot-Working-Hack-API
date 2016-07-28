@@ -238,7 +238,17 @@ class PGoApi:
                     recycle_count = item['count'] - MIN_BAD_ITEM_COUNTS[item['item_id']]
                     self.log.info("Recycling Item_ID {0}, item count {1}".format(item['item_id'], recycle_count))
                     self.recycle_inventory_item(item_id=item['item_id'], count=recycle_count)
-
+                    
+        for inventory_item in inventory_items:                                                                                                       
+            if "pokemon_data" in  inventory_item['inventory_item_data']:                                                                             
+                # is a pokemon:                                                                                                                      
+                pokemon = inventory_item['inventory_item_data']['pokemon_data']                                                                      
+                if 'cp' in pokemon:                                                                                                                  
+                  duplicates = [[poke['inventory_item_data']['pokemon_data']["pokemon_id"], poke['inventory_item_data']['pokemon_data']["cp"], poke['inventory_item_data']['pokemon_data']["id"]] for poke in inventory_items if 'pokemon_data' in poke['inventory_item_data'] and 'cp' in poke['inventory_item_data']['pokemon_data'] and poke['inventory_item_data']['pokemon_data']["pokemon_id"] == pokemon["pokemon_id"]]                                 
+                  duplicates.sort(key=lambda x:x[1], reverse=True)                                                                                   
+                  for dup in xrange(1,len(duplicates)):                                                                                              
+                    self.release_pokemon(pokemon_id = duplicates[dup][2])
+                    
         for pokemons in caught_pokemon.values():
             if len(pokemons) > MIN_SIMILAR_POKEMON:
                 pokemons = sorted(pokemons, lambda x,y: cmp(x['cp'],y['cp']),reverse=True)
